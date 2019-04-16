@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from datetie import datetime,timedelta
 from mpl_toolkits.mplot3d import Axes3D
 
-os.chdir("D:\\Documents\\Cours\\Deezer_Données\\Données\\small")
+os.chdir("C:/Users/pugli/Desktop/Projet Deezer")
 
 ## Calculs débiles
 
@@ -95,7 +95,7 @@ with open("2018_donnees_synop_Nantes.csv",'r') as csvfile:
     for row in reader:
         meteo_nantes.append(dict(row))
 
-with open("2018_donnees_synop_Nice",'r') as csvfile1
+with open("2018_donnees_synop_Nice.csv",'r') as csvfile1:
     reader = csv.DictReader(csvfile1, dialect='myDialect')
     meteo_nice = []
     for row in reader:
@@ -108,7 +108,7 @@ for entree in meteo_nantes:
     entree['logs']=[] ##Les logs seront stockés dans une liste
     date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
     for log in cs_full_dict:
-        if log['loc_city']='Nantes':
+        if log['loc_city']=='Nantes':
             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
             if date-decalage<ts and ts<=date+decalage :
                 entree['logs'].append(log)
@@ -118,7 +118,7 @@ for entree in meteo_nice:
     entree['logs']=[] ##Les logs seront stockés dans une liste
     date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
     for log in cs_full_dict:
-        if log['loc_city']='Nice':
+        if log['loc_city']=='Nice':
             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
             if date-decalage<ts and ts<=date+decalage :
                 entree['logs'].append(log)
