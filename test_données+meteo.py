@@ -1,4 +1,3 @@
-
 import json
 import csv
 import os
@@ -90,13 +89,13 @@ entry = [i for i in range(n-100,n)]
 ## Fusion avec les données météo (a compléter quand on aura toutes les bonnes données météo)
 
 csv.register_dialect('myDialect', delimiter = ';')
-with open("2018_donnees_synop_Nantes.csv,'r') as csvfile:
+with open("2018_donnees_synop_Nantes.csv",'r') as csvfile:
     reader = csv.DictReader(csvfile, dialect='myDialect')
     meteo_nantes = []
     for row in reader:
         meteo_nantes.append(dict(row))
-        
-with open("2018_donnees_synop_Nice,'r') as csvfile1
+
+with open("2018_donnees_synop_Nice",'r') as csvfile1
     reader = csv.DictReader(csvfile1, dialect='myDialect')
     meteo_nice = []
     for row in reader:
@@ -113,7 +112,7 @@ for entree in meteo_nantes:
             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
             if date-decalage<ts and ts<=date+decalage :
                 entree['logs'].append(log)
-                
+
 for entree in meteo_nice:
     entree['Date']=entree['Date'][:19] ##on supprime la partie "décalage horaire" de la date, inutile
     entree['logs']=[] ##Les logs seront stockés dans une liste
