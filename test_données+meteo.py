@@ -4,7 +4,7 @@ import os
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
-from datetie import datetime,timedelta
+from datetime import datetime,timedelta
 from mpl_toolkits.mplot3d import Axes3D
 
 os.chdir("C:/Users/pugli/Desktop/Projet Deezer")
