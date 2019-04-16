@@ -92,20 +92,37 @@ entry = [i for i in range(n-100,n)]
 csv.register_dialect('myDialect', delimiter = ';')
 with open("donnees_meteo.csv", 'r') as csvfile:
     reader = csv.DictReader(csvfile, dialect='myDialect')
-    meteo_tab = []
+    meteo_nantes = []
     for row in reader:
-        meteo_tab.append(dict(row))
+        meteo_nantes.append(dict(row))
+        
+with open("donnees_meteo.csv", 'r') as csvfile1:
+    reader = csv.DictReader(csvfile1, dialect='myDialect')
+    meteo_nice = []
+    for row in reader:
+        meteo_nice.append(dict(row))
 
 decalage = timedelta(hours=1, minutes=30)
 
-for entree in meteo_tab:
+for entree in meteo_nantes:
     entree['Date']=entree['Date'][:19] ##on supprime la partie "décalage horaire" de la date, inutile
     entree['logs']=[] ##Les logs seront stockés dans une liste
     date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
     for log in cs_full_dict:
-        ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
-        if date-decalage<ts and ts<=date+decalage :
-            entree['logs'].append(log)
+        if log['loc_city']='Nantes':
+            ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
+            if date-decalage<ts and ts<=date+decalage :
+                entree['logs'].append(log)
+                
+for entree in meteo_nice:
+    entree['Date']=entree['Date'][:19] ##on supprime la partie "décalage horaire" de la date, inutile
+    entree['logs']=[] ##Les logs seront stockés dans une liste
+    date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
+    for log in cs_full_dict:
+        if log['loc_city']='Nice':
+            ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
+            if date-decalage<ts and ts<=date+decalage :
+                entree['logs'].append(log)
 
 
 ## Visualisation des Russell
