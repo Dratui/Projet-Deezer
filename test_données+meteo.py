@@ -90,13 +90,13 @@ entry = [i for i in range(n-100,n)]
 ## Fusion avec les données météo (a compléter quand on aura toutes les bonnes données météo)
 
 csv.register_dialect('myDialect', delimiter = ';')
-with open("donnees_meteo.csv", 'r') as csvfile:
+with open("2018_donnees_synop_Nantes.csv,'r') as csvfile:
     reader = csv.DictReader(csvfile, dialect='myDialect')
     meteo_nantes = []
     for row in reader:
         meteo_nantes.append(dict(row))
         
-with open("donnees_meteo.csv", 'r') as csvfile1:
+with open("2018_donnees_synop_Nice,'r') as csvfile1
     reader = csv.DictReader(csvfile1, dialect='myDialect')
     meteo_nice = []
     for row in reader:
