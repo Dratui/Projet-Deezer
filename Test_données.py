@@ -43,6 +43,8 @@ for i in range(len(cs_song_dict)):
             for key in current_dico.keys():
                 cs_full_dict[j][key]=current_dico[key]
                 
+# Par exemple cs_full_dict {'artist_id': 174351, 'genres_names': ['pop'], 'anon_user_id': '5446b828bebb9e4a6bf7464747e32da9278c75db', 'mood_global_value': [0.26812779406706494, -0.18350800250967345, 0.34582894543806714], 'loc_city': 'Nantes', 'is_listened': 1, 'ts_listen': 1528292798, 'media_id': 491449632}
+                
 ## Détermination intervalle de temps
 
 times = np.array([cs_full_dict[i]['ts_listen'] for i in range(n)])
@@ -58,13 +60,14 @@ cs_full_dict = sorted(cs_full_dict, key=fctSortDict, reverse=False)
         
 ## Vérification répartition dans le temps
             
-entry = [i for i in range(n-100,n)]
-time_red = [cs_full_dict[i]['ts_listen'] - time_min for i in entry]
-
-plt.plot(entry, time_red)
-plt.show()
+# entry = [i for i in range(n)]
+# time_red = [cs_full_dict[i]['ts_listen'] - time_min for i in entry]
+# 
+# plt.plot(entry, time_red)
+# plt.show()
 
 # Au début les données sont assez espacées, à la fin elles sont très proches -> plutôt utiliser la fin
+
 
 ## Retrait des valeurs où il manque le Russell 
 
@@ -107,6 +110,7 @@ plt.show()
 
 # C'est assez anarchique pour l'ensemble des utilisateurs, mais peut-être qu'on peut chercher utilisateur par utilisateur
 
+
 ## Utilisateurs présents à cette période
 
 liste_user = []
@@ -119,7 +123,7 @@ for i in entry :
 
 ## Test pour un utilisateur
 
-user = liste_user[2]
+user = liste_user[1]
 
 donnees_user = [cs_full_dict[i] for i in range(n) if cs_full_dict[i]['anon_user_id'] == user]
 n_user = len(donnees_user)
@@ -154,7 +158,7 @@ Dt = np.array([russell_global_x_PCA, russell_global_y_PCA, russell_global_z_PCA]
 D = np.transpose(Dt)
 
 M = np.dot(Dt,D)/n
-M_diag = np.linalg.eig(M)[0]
+M_diag = np.linalg.eig(M)
 
 # Une valeur propre est très très faible devant les autres : on peut la négliger, et dire que seulement 2 variables sont utiles
 
