@@ -32,37 +32,61 @@ for i in range(len(cs_song_infos)):
 
 
 csv.register_dialect('myDialect', delimiter = ';')
-with open("2018-donnees-synop-Nantes.csv", 'r') as csvfile:
+with open("2018-donnees-synop-Nantes.csv",'r') as csvfile:
     reader = csv.DictReader(csvfile, dialect='myDialect')
-    meteos = []
+    meteo_nantes = []
     for row in reader:
-        meteos.append(dict(row))
+        meteo_nantes.append(dict(row))
+
+with open("2018-donnees-synop-Nice.csv",'r') as csvfile1:
+    reader = csv.DictReader(csvfile1, dialect='myDialect')
+    meteo_nice = []
+    for row in reader:
+        meteo_nice.append(dict(row))
 
 #print(meteos)
 #print(meteos[0]['Date'])
 
-meteos_bonne_date=[]
-for entree in meteos:
+meteos_bonne_date_nantes=[]
+for entree in meteo_nantes:
     entree['Date']=entree['Date'][:19] ##on supprime la partie "décalage horaire" de la date, inutile
     if datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S")>=datetime(2018, 5, 14, 15, 46, 16) and datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S")<=datetime(2018, 6, 6, 23, 55, 50):
          entree['logs']=[] ##Les logs seront stockés dans une liste
          entree['Date'] = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
-         meteos_bonne_date.append(entree)
+         meteos_bonne_date_nantes.append(entree)
 
+meteos_bonne_date_nice=[]
+for entree in meteo_nice:
+    entree['Date']=entree['Date'][:19] ##on supprime la partie "décalage horaire" de la date, inutile
+    if datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S")>=datetime(2018, 5, 14, 15, 46, 16) and datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S")<=datetime(2018, 6, 6, 23, 55, 50):
+         entree['logs']=[] ##Les logs seront stockés dans une liste
+         entree['Date'] = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
+         meteos_bonne_date_nice.append(entree)
 #print(datetime(2018, 5, 14, 15, 46, 16))
-#print(meteos_bonne_date[0])
+#print(meteos_bonne_date_nantes[0])
 
 
 ##Go trier les logs par date !
 
 decalage = timedelta(hours=1, minutes=30)
 
-for entree in meteos_bonne_date:
+for entree in meteos_bonne_date_nantes:
      date = entree['Date']
      entree['logs']=[] ##Les logs seront stockés dans une liste
-     for log in truelogs:
-         ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
-         if date-decalage<ts and ts<=date+decalage :
-             entree['logs'].append(log)
+     for log in cs_joint:
+         if log['loc_city']=='Nantes':
+             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
+             if date-decalage<ts and ts<=date+decalage :
+                 entree['logs'].append(log)
 
-print(meteos_bonne_date[0])
+for entree in meteos_bonne_date_nice:
+     date = entree['Date']
+     entree['logs']=[] ##Les logs seront stockés dans une liste
+     for log in cs_joint:
+         if log['loc_city']=='Nice':
+             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
+             if date-decalage<ts and ts<=date+decalage :
+                 entree['logs'].append(log)
+
+print(meteos_bonne_date_nantes[0])
+print(meteos_bonne_date_nice[0])
