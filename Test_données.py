@@ -81,7 +81,7 @@ for i in entry :
 cs_full_dict = [cs_full_dict[i] for i in entry if i not in liste_manquant]
 
 n = len(cs_full_dict)
-entry = [i for i in range(n-100,n)]
+entry = [i for i in range(n)]
 
 
 # Jsais pas pourquoi mais il manque des Russell parfois, donc on vire direct
@@ -98,13 +98,18 @@ x_global_moy, x_global_var = moyenne(russell_global_x), variance(russell_global_
 y_global_moy, y_global_var = moyenne(russell_global_y), variance(russell_global_y)
 z_global_moy, z_global_var = moyenne(russell_global_z), variance(russell_global_z)
 
-# fig = plt.figure()
-# ax = fig.gca(projection='3d')
-# ax.scatter3D(russell_x, russell_y, russell_z)
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.scatter3D(russell_global_x, russell_global_y, russell_global_z)
 
-plt.plot(entry, russell_global_x, 'b')
-plt.plot(entry, russell_global_y, 'r')
-plt.plot(entry, russell_global_z, 'g')
+ax.set_xlabel('Arousal')
+ax.set_ylabel('Valence')
+ax.set_zlabel('Dominance')
+
+#plt.plot(entry, russell_global_x, 'b', label = 'Arousal')
+#plt.plot(entry, russell_global_y, 'r', label = 'Valence')
+#plt.plot(entry, russell_global_z, 'g', label = 'Dominance')
+#plt.legend()
 
 plt.show()
 
@@ -149,9 +154,9 @@ plt.show()
 
 ## Test PCA
 
-russell_global_x_PCA = [russell_global_x[i] - x_global_moy for i in range(n)]
-russell_global_y_PCA = [russell_global_y[i] - y_global_moy for i in range(n)]
-russell_global_z_PCA = [russell_global_z[i] - z_global_moy for i in range(n)]
+russell_global_x_PCA = [(russell_global_x[i] - x_global_moy)/(x_global_var**0.5) for i in range(n)]
+russell_global_y_PCA = [(russell_global_y[i] - y_global_moy)/(y_global_var**0.5) for i in range(n)]
+russell_global_z_PCA = [(russell_global_z[i] - z_global_moy)/(z_global_var**0.5) for i in range(n)]
 
 
 Dt = np.array([russell_global_x_PCA, russell_global_y_PCA, russell_global_z_PCA])

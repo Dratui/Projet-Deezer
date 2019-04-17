@@ -111,3 +111,29 @@ M_diag = np.linalg.eig(M)
 plt.plot(liste_arousal, liste_valence, 'b+')
 plt.show()
 
+## Corrélation mais sans erreur
+
+liste_bpm = [cs_full_dict[i]['bpm'] for i in entry]
+liste_gain = [cs_full_dict[i]['gain'] for i in entry]
+liste_arousal = [cs_full_dict[i]['mood_global_value'][0] for i in entry]
+liste_valence = [cs_full_dict[i]['mood_global_value'][1] for i in entry]
+
+bpm_moy, bpm_var = moyenne(liste_bpm), variance(liste_bpm)
+gain_moy, gain_var = moyenne(liste_gain), variance(liste_gain)
+arousal_moy, arousal_var = moyenne(liste_arousal), variance(liste_arousal)
+valence_moy, valence_var = moyenne(liste_valence), variance(liste_valence)
+
+liste_valence_PCA = [(liste_valence[i] - valence_moy)/(valence_var**0.5) for i in entry]
+liste_arousal_PCA = [(liste_arousal[i] - arousal_moy)/(arousal_var**0.5) for i in entry]
+liste_bpm_PCA = [(liste_bpm[i] - bpm_moy)/(bpm_var)**0.5 for i in entry]
+liste_gain_PCA = [(liste_gain[i] - gain_moy)/(gain_var)**0.5 for i in entry]
+
+Dt = np.array([liste_bpm_PCA, liste_gain_PCA, liste_valence_PCA, liste_arousal_PCA])
+D = np.transpose(Dt)
+
+M = np.dot(Dt,D)/50
+M_diag = np.linalg.eig(M)
+
+plt.plot(liste_valence_PCA, liste_gain_PCA, 'b+')
+plt.show()
+
