@@ -2,19 +2,12 @@ import json
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
-from datetime import datetime,timedelta
-
-def moyenne(liste) :
-    return sum(liste)/len(liste)
-
-def variance(liste) :
-    m = moyenne(liste)
-    return moyenne([(x-m)**2 for x in liste])
+from datetime import datetime
 
 ## Traitement du JSON (merci léo)
 
-cs_logs_dict = []
-cs_song_dict = []
+cs_logs_dict = [] #liste des écoutes
+cs_song_dict = [] #liste des chansons
 
 for line in open("centralesupelec_logs.json","r") :
     cs_logs_dict.append(json.loads(line))
@@ -25,7 +18,7 @@ for line in open("centralesupelec_song_infos.json","r") :
 keys_logs = cs_logs_dict[0].keys()
 keys_song = cs_song_dict[0].keys()
 
-cs_full_dict = copy.deepcopy(cs_logs_dict)
+cs_full_dict = copy.deepcopy(cs_logs_dict) #liste des écoutes avec toutes les informations sur la chanson
 n = len(cs_full_dict)
 
 for i in range(len(cs_song_dict)):
