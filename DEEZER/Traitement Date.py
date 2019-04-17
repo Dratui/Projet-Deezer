@@ -106,9 +106,25 @@ for entree in meteos_bonne_date_nantes:
 
 #print(Arousal)
 #print(Précipitation)
-plt.plot(Arousal,Précipitation, "r^")
-plt.show()
-plt.plot(Valence,Précipitation, "bo")
-plt.show()
-plt.plot(Arousal,Température, "r^")
-plt.show()
+# plt.plot(Arousal,Précipitation, "r^")
+# plt.show()
+# plt.plot(Valence,Précipitation, "bo")
+# plt.show()
+# plt.plot(Arousal,Température, "r^")
+# plt.show()
+
+####################################### Obtention liste des utilisateurs #######################################
+liste_utilisateurs_nantes=[]
+for entree in cs_joint:
+    if entree['anon_user_id'] not in liste_utilisateurs_nantes and entree['loc_city']=='Nantes':
+        liste_utilisateurs_nantes.append(entree['anon_user_id'])
+
+liste_utilisateurs_nice=[]
+for entree in cs_joint:
+    if entree['anon_user_id'] not in liste_utilisateurs_nice and entree['loc_city']=='Nice':
+        liste_utilisateurs_nice.append(entree['anon_user_id'])
+
+#print(len(liste_utilisateurs_nantes))
+#utilisateur_test=liste_utilisateurs_nantes[0]
+
+####################################### Plot par utilisateur #######################################
