@@ -95,12 +95,14 @@ print(cs_joint[0])
 Arousal=[]
 Valence=[]
 Précipitation=[]
+Température=[]
 for entree in meteos_bonne_date_nantes:
     for log in entree['logs']:
         if 'mood_global_value' in log:
             Arousal.append(log['mood_global_value'][0])
             Valence.append(log['mood_global_value'][1])
             Précipitation.append(float(entree['PrÃ©cipitations dans les 3 derniÃ¨res heures']))
+            Température.append(float(entree['TempÃ©rature']))
 
 #print(Arousal)
 #print(Précipitation)
@@ -108,4 +110,5 @@ plt.plot(Arousal,Précipitation, "r^")
 plt.show()
 plt.plot(Valence,Précipitation, "bo")
 plt.show()
-
+plt.plot(Arousal,Température, "r^")
+plt.show()
