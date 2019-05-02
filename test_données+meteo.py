@@ -1,13 +1,13 @@
 import json
-import csv
 import os
+import csv
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime,timedelta
 from mpl_toolkits.mplot3d import Axes3D
 
-os.chdir("C:/Users/pugli/Desktop/Projet Deezer")
+os.chdir(r"C:\users\pugli\desktop\projet deezer")
 
 ## Calculs débiles
 
@@ -63,14 +63,14 @@ cs_full_dict = sorted(cs_full_dict, key=fctSortDict, reverse=False)
 entry = [i for i in range(n-100,n)]
 time_red = [cs_full_dict[i]['ts_listen'] - time_min for i in entry]
 
-plt.plot(entry, time_red)
+#plt.plot(entry, time_red)
 plt.show()
 
 # Au début les données sont assez espacées, à la fin elles sont très proches -> plutôt utiliser la fin
 
 ## Retrait des valeurs où il manque le Russell
 
-entry = [i for i in range(n-100,n)]
+entry = [i for i in range(0,n)]
 liste_manquant = []
 
 for i in entry :
@@ -80,7 +80,7 @@ for i in entry :
 cs_full_dict = [cs_full_dict[i] for i in entry if i not in liste_manquant]
 
 n = len(cs_full_dict)
-entry = [i for i in range(n-100,n)]
+entry = [i for i in range(0,n)]
 
 
 # Jsais pas pourquoi mais il manque des Russell parfois, donc on vire direct
@@ -89,13 +89,13 @@ entry = [i for i in range(n-100,n)]
 ## Fusion avec les données météo (a compléter quand on aura toutes les bonnes données météo)
 
 csv.register_dialect('myDialect', delimiter = ';')
-with open("2018_donnees_synop_Nantes.csv",'r') as csvfile:
+with open("2018-donnees-synop-Nantes.csv",'r') as csvfile:
     reader = csv.DictReader(csvfile, dialect='myDialect')
     meteo_nantes = []
     for row in reader:
         meteo_nantes.append(dict(row))
 
-with open("2018_donnees_synop_Nice.csv",'r') as csvfile1:
+with open("2018-donnees-synop-Nice.csv",'r') as csvfile1:
     reader = csv.DictReader(csvfile1, dialect='myDialect')
     meteo_nice = []
     for row in reader:
@@ -108,7 +108,7 @@ for entree in meteo_nantes:
     entree['logs']=[] ##Les logs seront stockés dans une liste
     date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
     for log in cs_full_dict:
-        if log['loc_city']=='Nantes':
+        if log['loc_city']=="Nantes":
             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
             if date-decalage<ts and ts<=date+decalage :
                 entree['logs'].append(log)
@@ -118,10 +118,11 @@ for entree in meteo_nice:
     entree['logs']=[] ##Les logs seront stockés dans une liste
     date = datetime.strptime(entree['Date'], "%Y-%m-%dT%H:%M:%S") ##ISO 8601 converti en date
     for log in cs_full_dict:
-        if log['loc_city']=='Nice':
+        if log['loc_city']=="Nice":
             ts = datetime.fromtimestamp(log['ts_listen']) ##le timestamp unix converti en date
             if date-decalage<ts and ts<=date+decalage :
                 entree['logs'].append(log)
+
 
 
 ## Visualisation des Russell
@@ -136,13 +137,13 @@ x_global_moy, x_global_var = moyenne(russell_global_x), variance(russell_global_
 y_global_moy, y_global_var = moyenne(russell_global_y), variance(russell_global_y)
 z_global_moy, z_global_var = moyenne(russell_global_z), variance(russell_global_z)
 
-# fig = plt.figure()
-# ax = fig.gca(projection='3d')
-# ax.scatter3D(russell_x, russell_y, russell_z)
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.scatter3D(russell_global_x, russell_global_y, russell_global_z)
 
-plt.plot(entry, russell_global_x, 'b')
-plt.plot(entry, russell_global_y, 'r')
-plt.plot(entry, russell_global_z, 'g')
+# plt.plot(entry, russell_global_x, 'b')
+# plt.plot(entry, russell_global_y, 'r')
+# plt.plot(entry, russell_global_z, 'g')
 
 plt.show()
 
@@ -175,11 +176,11 @@ x_user_moy, x_user_var = moyenne(russell_user_x), variance(russell_user_x)
 y_user_moy, y_user_var = moyenne(russell_user_y), variance(russell_user_y)
 z_user_moy, z_user_var = moyenne(russell_user_z), variance(russell_user_z)
 
-plt.plot([i for i in range(n_user)], russell_user_x, 'b')
-plt.plot([i for i in range(n_user)], russell_user_y, 'r')
-plt.plot([i for i in range(n_user)], russell_user_z, 'g')
+# plt.plot([i for i in range(n_user)], russell_user_x, 'b')
+# plt.plot([i for i in range(n_user)], russell_user_y, 'r')
+# plt.plot([i for i in range(n_user)], russell_user_z, 'g')
 
-print([[x_user_moy, x_user_var], [y_user_moy, y_user_var], [z_user_moy, z_user_var]])
+# print([[x_user_moy, x_user_var], [y_user_moy, y_user_var], [z_user_moy, z_user_var]])
 plt.show()
 
 # Alors on obtient que pour certains utilisateurs, la variance est moindre que la variance globale. C'est cool mais il faut voir à quel point c'est pertinent.
@@ -198,3 +199,120 @@ M = np.dot(Dt,D)/n
 M_diag = np.linalg.eig(M)[0]
 
 # Une valeur propre est très très faible devant les autres : on peut la négliger, et dire que seulement 2 variables sont utiles
+
+
+## Russel en fonction du temps décrit à Nice
+pluieA=[]
+pluieV=[]
+orageA=[]
+orageV=[]
+nuageA=[]
+nuageV=[]
+clairA=[]
+clairV=[]
+
+
+for entree in meteo_nice:
+    temps = entree['Temps passÃ© 1']
+    if 'Averse' in temps or 'Pluie' in temps:
+        for log in entree['logs']:
+            if log['anon_user_id']=='6ac0bdff1daa19cf21a9a34b9598db146e9d4adb':
+                if 'mood_global_value' in log.keys():
+                    pluieA.append(log['mood_global_value'][0])
+                    pluieV.append(log['mood_global_value'][1])
+    elif 'Orage' in temps:
+        for log in entree['logs']:
+            if log['anon_user_id']=='6ac0bdff1daa19cf21a9a34b9598db146e9d4adb':
+                if 'mood_global_value' in log.keys():
+                    orageA.append(log['mood_global_value'][0])
+                    orageV.append(log['mood_global_value'][1])
+    elif 'Nuages couvrant plus' in temps:
+        for log in entree['logs']:
+            if log['anon_user_id']=='6ac0bdff1daa19cf21a9a34b9598db146e9d4adb':
+                if 'mood_global_value' in log.keys():
+                    nuageA.append(log['mood_global_value'][0])
+                    nuageV.append(log['mood_global_value'][1])
+    elif 'Nuages ne couvrant pas plus' in temps:
+        for log in entree['logs']:
+            if log['anon_user_id']=='6ac0bdff1daa19cf21a9a34b9598db146e9d4adb':
+                if 'mood_global_value' in log.keys():
+                    clairA.append(log['mood_global_value'][0])
+                    clairV.append(log['mood_global_value'][1])
+
+print(pluieA)
+print(pluieV)
+print(orageA)
+print(orageV)
+print(nuageA)
+print(nuageV)
+print(clairA)
+print(clairV)
+plt.plot(pluieA,pluieV,'bo')
+
+plt.plot(orageA,orageV,'yo')
+
+plt.plot(nuageA,nuageV,'ro')
+
+plt.plot(clairA,clairV,'go')
+plt.show()
+
+
+
+## Vous savez, je ne crois pas qu'il y ait de bonne ou de mauvaise météo
+
+def vecteur(L):
+    return np.transpose(np.array([L]))
+
+labels_m=[]
+users=[]
+for log in cs_full_logs :
+    if not log['anon_user_id'] in users:
+        users.append(log[anon_user_id])
+list_A=[]
+for user in users:
+    russels=[]
+    meteos=[]
+    list_rm=[]
+    list_mm=[]
+    for entree in entrees_meteo:
+        userlogs=[]
+        for log in entree['logs'] :
+            if user == log('anon_user_id'):
+                userlogs.append(log)
+        m=[]
+        for label in labels_m:
+            m.append(entree[label])
+        m=vecteur(m)
+        for log in userlogs:
+            r=vecteur(log['mood_global_value'])
+            russels.append(r)
+            list_rm.append(np.dot(r,np.transpose(m)))
+        list_mm.append(np.dot(m,np.transpose(m)))
+        meteo.append(m)
+    u=moyenne(russels)
+    rm=moyenne(list_rm)
+    mm=moyenne(list_mm)
+    for m in meteos:
+        m=np.dot(u,np.transpose(m))
+    um=moyenne(meteos)
+    list_A.append([user,np.dot(rm-um,np.linalg.inv(mm))])
+
+normes=[]
+for A in list_A:
+    normes.append(np.linalg.norm(A[1]))
+
+plt.hist(norm)
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
