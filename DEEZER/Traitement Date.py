@@ -30,6 +30,7 @@ for i in range(len(cs_song_infos)):
             for key in current_dico.keys():
                 cs_joint[j][key]=current_dico[key]
 
+#print(cs_joint)
 
 csv.register_dialect('myDialect', delimiter = ';')
 with open("2018-donnees-synop-Nantes.csv",'r') as csvfile:
@@ -128,3 +129,21 @@ for entree in cs_joint:
 #utilisateur_test=liste_utilisateurs_nantes[0]
 
 ####################################### Plot par utilisateur #######################################
+
+####################################### Réalisation Analyse Gaussienne CF Doc Analyse Comparaison des estimateurs ########################################
+
+utilisateur=liste_utilisateurs_nice[0]
+res=[]
+for entree in meteos_bonne_date_nice:
+    for log in entree['logs']:
+        if log['anon_user_id']==utilisateur:
+            res.append((log,entree['Temps passÃ© 1']))
+
+print(res)
+musique_ecoutee_Nuages=[elem for elem in res if elem[1]=='Nuages couvrant plus de la moitiÃ© du ciel pendant toute la pÃ©riode considÃ©rÃ©e']
+musique_ecoutee_Pluit=[elem for elem in res if elem[1]=='Pluie']
+musique_ecoutee_Beau=[elem for elem in res if elem[1]=='Nuages ne couvrant pas plus de la moitiÃ© du ciel pendant toute la pÃ©riode considÃ©rÃ©e']
+print(musique_ecoutee_Nuages)
+print(len(musique_ecoutee_Nuages))
+
+
